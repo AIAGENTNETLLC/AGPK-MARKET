@@ -4,41 +4,78 @@ This repository hosts **downloadable software package files** used by the [Agent
 
 AgentNet’s catalog is **agent-first**: packages are built so **agents on AgentOS X** can discover, install, and use software—not merely so humans can download archives. Official packages are **agentized adaptations** of upstream products (command surfaces / drivers), not tar wrappers of GUIs.
 
-**Metadata** (discovery, health, registration) lives on AgentNet. **Binaries** are GitHub Release assets in this repo (or a vendor’s own HTTPS host).
+**Metadata** (discovery, health, registration) lives on AgentNet share. **Binaries** are Release assets here (or a vendor’s own HTTPS host).
 
-Machine index (website / docs):  
-`https://docs.aiagentnet.cloud/agpk/v1/firstparty-catalog.json`
+- Live catalog API: `GET https://api.agentnet.ink/share/v1/agpk/sources`
+- Human docs: https://docs.aiagentnet.cloud/agpk
+- Machine index (website mirror): https://docs.aiagentnet.cloud/agpk/v1/firstparty-catalog.json
+
+The tables below are **generated from the live share catalog after probe/revalidate**. Do not hand-edit between `AUTO:*` markers — run `scripts/sync_readme_from_share.py --write` (or wait for the scheduled GitHub Action).
 
 ---
 
 ## Official packages
 
-Current **AgentNet-maintained** market packages (10). Prefer the tags below; older Chromium/SDK seeds (1.0.x / 1.1.x) are historical only—do not re-register them.
+<!-- AUTO:OFFICIAL_PACKAGES:START -->
+Live from share catalog (`healthy` | `degraded`) · **10** official row(s).
 
-| Package ID | Version | Description | Release |
-|---|---|---|---|
-| `org.chromium.Chromium.runtime` | **1.2.0** | Agent Chromium: headless engine + full `chrome.*` / `browser.*` command surface | [chromium-runtime-v1.2.0](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/chromium-runtime-v1.2.0) |
-| `org.agentnet.agpk.sdk` | **1.2.0** | Vendor SDK C1–C4: scaffold / pack / validate + entry+driver templates | [agpk-sdk-v1.2.0](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/agpk-sdk-v1.2.0) |
-| `org.actualbudget.Actual.agent` | **1.1.0** | Agentized Actual Budget (HTTP when configured) | [actualbudget-Actual-agent-v1-1-0-71c12af4](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/actualbudget-Actual-agent-v1-1-0-71c12af4) |
-| `org.audacityteam.Audacity.agent` | **1.1.0** | Agentized audio path (audacity/ffmpeg probe; headless export) | [audacityteam-Audacity-agent-v1-1-0-64bc5b86](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/audacityteam-Audacity-agent-v1-1-0-64bc5b86) |
-| `org.bookstack.BookStack.agent` | **1.1.0** | Agentized BookStack REST (books / pages / search) | [bookstack-BookStack-agent-v1-1-0-f119d28f](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/bookstack-BookStack-agent-v1-1-0-f119d28f) |
-| `org.crater.Crater.agent` | **1.1.0** | Agentized Crater invoices API | [crater-Crater-agent-v1-1-0-cb61ea41](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/crater-Crater-agent-v1-1-0-cb61ea41) |
-| `org.docuseal.DocuSeal.agent` | **1.1.0** | Agentized DocuSeal REST submissions | [docuseal-DocuSeal-agent-v1-1-0-8a287a65](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/docuseal-DocuSeal-agent-v1-1-0-8a287a65) |
-| `org.jitsi.JitsiMeet.agent` | **1.1.0** | Agentized Jitsi Meet room create | [jitsi-JitsiMeet-agent-v1-1-0-7141a289](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/jitsi-JitsiMeet-agent-v1-1-0-7141a289) |
-| `org.kde.Kdenlive.agent` | **1.1.0** | Agentized video batch path (melt/ffmpeg; not GUI-primary) | [kde-Kdenlive-agent-v1-1-0-41cfe7fe](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/kde-Kdenlive-agent-v1-1-0-41cfe7fe) |
-| `org.nextcloud.Nextcloud.agent` | **1.1.0** | Agentized Nextcloud WebDAV + OCS probe | [nextcloud-Nextcloud-agent-v1-1-0-572dd393](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/nextcloud-Nextcloud-agent-v1-1-0-572dd393) |
+Classification: `download_uri` under `github.com/AIAGENTNETLLC/` **or** vendor **AIAGENTNET LLC** / AgentNet.
 
-Each release ships the installable archive **and** a matching `.sha256` file.
+| Package ID | Version | Status | Vendor | Description | Artifact |
+|---|---|---|---|---|---|
+| `org.actualbudget.Actual.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Actual Budget: drives Actual server HTTP when configured. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/actualbudget-Actual-agent-v1-1-0-71c12af4) |
+| `org.agentnet.agpk.sdk` | **1.2.0** | `healthy` | AIAGENTNET LLC | Vendor toolkit C1–C4: scaffold/pack/validate with entry+driver; list_commands + invoke ready templates. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/agpk-sdk-v1.2.0) |
+| `org.audacityteam.Audacity.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized audio path: probes audacity/ffmpeg; headless export via ffmpeg FOSS engine. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/audacityteam-Audacity-agent-v1-1-0-64bc5b86) |
+| `org.bookstack.BookStack.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized BookStack: real REST API books/pages/search. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/bookstack-BookStack-agent-v1-1-0-f119d28f) |
+| `org.chromium.Chromium.runtime` | **1.2.0** | `healthy` | AIAGENTNET LLC | Headless Chromium engine + full chrome.*/browser.* agent command surface (78 cmds). Functional parity browser automation; projection.* for human view. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/chromium-runtime-v1.2.0) |
+| `org.crater.Crater.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Crater: real /api/v1 bootstrap and invoices when Crater is up. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/crater-Crater-agent-v1-1-0-cb61ea41) |
+| `org.docuseal.DocuSeal.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized DocuSeal: real REST API list/create submissions against DocuSeal instance. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/docuseal-DocuSeal-agent-v1-1-0-8a287a65) |
+| `org.jitsi.JitsiMeet.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Jitsi Meet: real room create against Jitsi HTTP endpoint. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/jitsi-JitsiMeet-agent-v1-1-0-7141a289) |
+| `org.kde.Kdenlive.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized video path: melt/ffmpeg FOSS batch render (Kdenlive domain, no GUI primary). | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/kde-Kdenlive-agent-v1-1-0-41cfe7fe) |
+| `org.nextcloud.Nextcloud.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Nextcloud: WebDAV put/get + OCS user probe. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/nextcloud-Nextcloud-agent-v1-1-0-572dd393) |
 
 ### Not AGPK market packages
 
-**Office** and **IM** ship **preinstalled** with AgentOS X. They are product entitlements, not market install packages, and will not appear in this table.
+**Office** and **IM** ship **preinstalled** with AgentOS X (product entitlements). They are **not** market install packages and will not appear here.
+<!-- AUTO:OFFICIAL_PACKAGES:END -->
+
+---
+
+## Other vendors (community / third-party)
+
+<!-- AUTO:VENDOR_PACKAGES:START -->
+Live third-party / other-vendor packages from the same share catalog (healthy | degraded), grouped by `vendor_name`.
+
+_No non-official packages are live in the catalog right now. When independent providers register and pass probe, they appear here automatically._
+<!-- AUTO:VENDOR_PACKAGES:END -->
+
+---
+
+## Acknowledgments
+
+<!-- AUTO:ACKNOWLEDGMENTS:START -->
+AgentNet official market packages are **agentized adaptations**. We do **not** claim ownership of the original software. Thanks to the upstream projects and communities:
+
+| Upstream | Project | Thanks for | Link |
+|---|---|---|---|
+| **Chromium** | The Chromium Authors / Google Chromium project | Headless browser engine basis for our agent command surface. | [https://www.chromium.org/](https://www.chromium.org/) |
+| **Actual Budget** | Actual Budget (open-source personal finance) | Agentized around Actual’s server HTTP surface. | [https://actualbudget.org/](https://actualbudget.org/) |
+| **Audacity** | Audacity Team — Audacity digital audio editor | Audio domain packaging; headless paths use FOSS ffmpeg where noted. | [https://www.audacityteam.org/](https://www.audacityteam.org/) |
+| **BookStack** | BookStack documentation platform | Agentized against BookStack’s REST API. | [https://www.bookstackapp.com/](https://www.bookstackapp.com/) |
+| **Crater** | Crater Invoice (open-source invoicing) | Agentized against Crater’s HTTP API. | [https://craterapp.com/](https://craterapp.com/) |
+| **DocuSeal** | DocuSeal document signing | Agentized against DocuSeal’s REST API. | [https://www.docuseal.com/](https://www.docuseal.com/) |
+| **Jitsi Meet** | Jitsi Meet (8x8 / community) | Agentized room/meeting HTTP flows. | [https://jitsi.org/](https://jitsi.org/) |
+| **Kdenlive** | KDE — Kdenlive video editor | Video domain; batch paths use melt/ffmpeg FOSS tools. | [https://kdenlive.org/](https://kdenlive.org/) |
+| **Nextcloud** | Nextcloud GmbH — Nextcloud | Agentized WebDAV / OCS-style access patterns. | [https://nextcloud.com/](https://nextcloud.com/) |
+
+Trademarks and product names belong to their respective owners. Use of names is for identification of agentized integrations only.
+
+If you maintain an upstream project listed above and want a different credit line or link, open an issue or contact [support@aiagentnet.cloud](mailto:support@aiagentnet.cloud).
+<!-- AUTO:ACKNOWLEDGMENTS:END -->
 
 ---
 
 ## Catalog API
-
-Live discovery (share registry — metadata only):
 
 ```http
 GET https://api.agentnet.ink/share/v1/agpk/sources
@@ -50,9 +87,7 @@ Anonymous registration (metadata + `download_uri` + `sha256`; package file must 
 POST https://api.agentnet.ink/share/v1/agpk/sources
 ```
 
-Website proxy (same market): `POST https://www.aiagentnet.cloud/api/agpk/sources`
-
-Human docs: [AGPK software](https://docs.aiagentnet.cloud/agpk)
+Website proxy: `POST https://www.aiagentnet.cloud/api/agpk/sources`
 
 ---
 
@@ -62,17 +97,17 @@ Human docs: [AGPK software](https://docs.aiagentnet.cloud/agpk)
 2. Host the archive on GitHub Releases (this org or yours) or any public HTTPS URL.
 3. Register with AgentNet with `download_uri` + SHA-256.
 4. Automated probe/scan → `healthy` / `degraded` / reject if no command surface.
+5. After the package is live, this README’s tables refresh from the share catalog (Action or script).
 
 ---
 
 ## Links
 
-- Website: https://www.aiagentnet.cloud  
-- Docs (AGPK): https://docs.aiagentnet.cloud/agpk  
-- First-party catalog JSON: https://docs.aiagentnet.cloud/agpk/v1/firstparty-catalog.json  
-- Live catalog API: https://api.agentnet.ink/share/v1/agpk/sources  
-- Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases  
+- Website: https://www.aiagentnet.cloud
+- Docs (AGPK): https://docs.aiagentnet.cloud/agpk
+- Live catalog API: https://api.agentnet.ink/share/v1/agpk/sources
+- Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases
 
----
-
-*README synced to official catalog · 2026-07-13*
+<!-- AUTO:SYNC_META:START -->
+_Last auto-sync: **2026-07-13 12:17 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=10 · other-vendor=0 · live_total=10. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
+<!-- AUTO:SYNC_META:END -->
