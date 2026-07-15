@@ -117,6 +117,27 @@ UPSTREAM_ACK: list[dict[str, str]] = [
         "url": "https://nextcloud.com/",
         "note": "Agentized WebDAV / OCS-style access patterns.",
     },
+    {
+        "package_prefix": "org.agentnet.agentos-x.antivirus-clamav",
+        "upstream": "ClamAV",
+        "project": "Cisco Talos — ClamAV antivirus engine",
+        "url": "https://www.clamav.net/",
+        "note": "On-demand/scheduled malware scan engine for AgentOS X host security AGPK.",
+    },
+    {
+        "package_prefix": "org.agentnet.agentos-x.vulnscan-lynis",
+        "upstream": "Lynis",
+        "project": "CISOfy — Lynis security auditing tool",
+        "url": "https://cisofy.com/lynis/",
+        "note": "Host vulnerability/baseline audit reports for AgentOS X security AGPK.",
+    },
+    {
+        "package_prefix": "org.agentnet.agentos-x.fail2ban",
+        "upstream": "Fail2ban",
+        "project": "Fail2ban community — intrusion prevention",
+        "url": "https://www.fail2ban.org/",
+        "note": "SSH/jail anti-bruteforce packaging complementing OS firewall.",
+    },
 ]
 
 
