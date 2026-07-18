@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Forgejo Workbench (AgentOS)
+Name[zh_CN]=Forgejo 工作台 (AgentOS)
+Name[zh]=Forgejo 工作台 (AgentOS)
+Comment=Desktop workbench for local Forgejo core (system language UI)
+Comment[zh_CN]=本地 Forgejo core 桌面工作台（界面随系统语言）
+Comment[zh]=本地 Forgejo core 桌面工作台（界面随系统语言）
+# INSTALL rewrites to absolute path of forgejo-desktop-launch.sh + env
+Exec=env AGPK_INSTALL_ROOT=__UI_ROOT__ FORGEJO_CORE_ROOT=__CORE_ROOT__ __UI_ROOT__/payload/bin/forgejo-desktop-launch.sh
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;RevisionControl;
+StartupWMClass=ForgejoAgentOS

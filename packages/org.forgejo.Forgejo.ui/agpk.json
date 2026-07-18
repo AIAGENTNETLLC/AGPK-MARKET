@@ -1,0 +1,43 @@
+{
+  "agpk_version": "1.0",
+  "id": "org.forgejo.Forgejo.ui",
+  "name": "Forgejo UI Workbench (desktop)",
+  "version": "1.1.2",
+  "package_kind": "ui",
+  "ui_face": "desktop_workbench",
+  "depends": [
+    {
+      "package_id": "org.forgejo.Forgejo.core",
+      "version": ">=1.0.0"
+    }
+  ],
+  "os": ["linux", "agentos-x-desktop"],
+  "arch": ["x86_64"],
+  "vendor": {
+    "name": "AIAGENTNET LLC",
+    "url": "https://www.aiagentnet.cloud"
+  },
+  "upstream": {
+    "name": "Forgejo",
+    "url": "https://forgejo.org/",
+    "note": "Desktop workbench shells core; does not run a second Forgejo process"
+  },
+  "source_class": "agent_package",
+  "runtime": {
+    "binary": "workbench_shell",
+    "process": "local_workbench_server",
+    "depends_core": "org.forgejo.Forgejo.core",
+    "docker_primary": false,
+    "primary_path": "dedicated_window_not_xdg_open"
+  },
+  "ahcp": {
+    "signed": false,
+    "surface": "surface.json",
+    "badge": "partial"
+  },
+  "lifecycle": {
+    "install": { "method": "cli", "entry": ["sh", "INSTALL"] },
+    "uninstall": { "method": "cli", "entry": ["sh", "UNINSTALL"] }
+  },
+  "description": "Desktop workbench for Forgejo core: dedicated WebView/Chromium --app window + local API workbench (list/create repos). ui_face=desktop_workbench. NOT the 1.0.0 launcher-only xdg-open package. Depends org.forgejo.Forgejo.core. Does not claim pixel-complete upstream GUI rewrite."
+}

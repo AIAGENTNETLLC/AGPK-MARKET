@@ -1,0 +1,102 @@
+#!/bin/sh
+# UI 1.1.2 — desktop workbench. Requires core. Not launcher-only.
+set -e
+PKG_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="${AGPK_INSTALL_ROOT:-}"
+if [ -z "$ROOT" ]; then
+  ROOT="/opt/agentx/agpk/org.forgejo.Forgejo.ui"
+fi
+export AGPK_INSTALL_ROOT="$ROOT"
+
+CORE_ROOT="${FORGEJO_CORE_ROOT:-}"
+if [ -z "$CORE_ROOT" ]; then
+  for c in \
+    "$(dirname "$ROOT")/org.forgejo.Forgejo.core" \
+    /srv/agentnet-data/agpk/org.forgejo.Forgejo.core \
+    /opt/agentx/agpk/org.forgejo.Forgejo.core
+  do
+    if [ -d "$c" ] && [ -f "$c/agpk.json" ]; then
+      CORE_ROOT="$c"
+      break
+    fi
+  done
+fi
+
+if [ -z "$CORE_ROOT" ] && [ "${AGPK_UI_SKIP_CORE_CHECK:-0}" != "1" ]; then
+  echo '{"ok":false,"error":"depends_core_missing","depends":"org.forgejo.Forgejo.core","ui_face":"desktop_workbench"}' >&2
+  exit 2
+fi
+
+mkdir -p "$ROOT/payload/bin" "$ROOT/payload/workbench/static" "$ROOT/payload/desktop" "$ROOT/payload/projection" "$ROOT/run"
+cp -a "$PKG_DIR/payload/." "$ROOT/payload/"
+for f in agpk.json agent-commands.json surface.json USAGE.md AGENT_CAPABILITIES.md; do
+  [ -f "$PKG_DIR/$f" ] && cp -a "$PKG_DIR/$f" "$ROOT/"
+done
+chmod +x "$ROOT/payload/bin/"* "$ROOT/payload/bin/forgejo-desktop-launch.sh" 2>/dev/null || true
+
+BASE_URL="http://127.0.0.1:3000/"
+if [ -n "$CORE_ROOT" ] && [ -f "$CORE_ROOT/service.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . "$CORE_ROOT/service.env"
+  set +a
+  BASE_URL="${AGPK_SERVICE_URL:-${FORGEJO_ROOT_URL:-$BASE_URL}}"
+fi
+
+cat >"$ROOT/service.env" <<EOF
+FORGEJO_CORE_ROOT=${CORE_ROOT:-}
+AGPK_SERVICE_URL=${BASE_URL}
+FORGEJO_ROOT_URL=${BASE_URL}
+PACKAGE_KIND=ui
+UI_FACE=desktop_workbench
+PACKAGE_VERSION=1.1.2
+DEPENDS_PACKAGE=org.forgejo.Forgejo.core
+EOF
+chmod 644 "$ROOT/service.env"
+
+cat >"$ROOT/run_cmd.sh" <<'EOS'
+#!/bin/sh
+set -e
+HERE="$(cd "$(dirname "$0")" && pwd)"
+export AGPK_INSTALL_ROOT="$HERE"
+if [ -f "$HERE/service.env" ]; then set -a; . "$HERE/service.env"; set +a; fi
+CMD="$1"; shift || true
+ARGS="${AGPK_INVOKE_ARGS:-}"
+if [ -z "$ARGS" ]; then
+  if [ "$#" -gt 0 ]; then ARGS="$1"; else ARGS='{}'; fi
+fi
+exec python3 "$HERE/payload/bin/forgejo-ui-agent.py" "$CMD" "$ARGS"
+EOS
+chmod +x "$ROOT/run_cmd.sh"
+
+python3 -c "
+import json
+from pathlib import Path
+root=Path('$ROOT')
+p=root/'agent-commands.json'
+doc=json.loads(p.read_text())
+for c in doc.get('commands',[]):
+    c['entry']=['sh','run_cmd.sh',c['id']]
+p.write_text(json.dumps(doc,indent=2)+chr(10))
+"
+
+set +e
+python3 "$ROOT/payload/bin/forgejo-ui-agent.py" forgejo.ui.desktop.install '{}'
+set -e
+
+python3 - <<PY
+import json
+print(json.dumps({
+  "ok": True,
+  "package_id": "org.forgejo.Forgejo.ui",
+  "version": "1.1.2",
+  "package_kind": "ui",
+  "ui_face": "desktop_workbench",
+  "depends": "org.forgejo.Forgejo.core",
+  "core_root": """${CORE_ROOT:-}""",
+  "base_url": """${BASE_URL}""",
+  "install_root": """$ROOT""",
+  "note": "primary path forgejo.ui.workbench.open — not xdg-open launcher parity",
+}, indent=2))
+PY
+echo "INSTALL ok org.forgejo.Forgejo.ui 1.1.2 desktop_workbench" >&2

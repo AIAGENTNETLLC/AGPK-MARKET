@@ -1,0 +1,14 @@
+{
+  "ahcp_version": "1.0",
+  "package_id": "org.forgejo.Forgejo.ui",
+  "package_kind": "ui",
+  "ui_face": "desktop_workbench",
+  "version": "1.1.2",
+  "software": "Forgejo UI Workbench",
+  "description": "Desktop workbench depending on core. Primary: dedicated window + repo main chain. 1.0.0 was launcher_only (superseded).",
+  "commands": [
+    {"id": "forgejo.ui.workbench.open", "title": "Open workbench"},
+    {"id": "forgejo.ui.repo.list", "title": "List repos"},
+    {"id": "forgejo.ui.repo.create", "title": "Create repo"}
+  ]
+}

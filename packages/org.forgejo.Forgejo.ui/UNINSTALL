@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+ROOT="${AGPK_INSTALL_ROOT:-/opt/agentx/agpk/org.forgejo.Forgejo.ui}"
+export AGPK_INSTALL_ROOT="$ROOT"
+if [ -x "$ROOT/run_cmd.sh" ]; then
+  sh "$ROOT/run_cmd.sh" forgejo.ui.desktop.remove '{}' 2>/dev/null || true
+fi
+rm -rf "$ROOT"
+echo "UNINSTALL ok org.forgejo.Forgejo.ui"

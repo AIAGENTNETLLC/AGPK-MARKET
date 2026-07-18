@@ -1,0 +1,7 @@
+{
+  "kind": "web_panel",
+  "title": "Forgejo",
+  "depends_package": "org.forgejo.Forgejo.core",
+  "url_from": "core.service.env.AGPK_SERVICE_URL",
+  "default_url": "http://127.0.0.1:3000/"
+}

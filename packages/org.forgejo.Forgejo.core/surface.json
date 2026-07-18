@@ -1,0 +1,14 @@
+{
+  "ahcp_version": "1.0",
+  "package_id": "org.forgejo.Forgejo.core",
+  "software": "Forgejo Core",
+  "package_kind": "core",
+  "description": "Agentized Forgejo service: official binary, systemd, system PostgreSQL, full forge command face.",
+  "commands": [
+    {"id": "forgejo.service.status", "title": "Service status"},
+    {"id": "forgejo.health", "title": "Health"},
+    {"id": "forgejo.repo.create", "title": "Create repo"},
+    {"id": "forgejo.user.create", "title": "Create user"},
+    {"id": "forgejo.token.ensure", "title": "Ensure token"}
+  ]
+}

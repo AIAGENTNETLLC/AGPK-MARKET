@@ -1,0 +1,42 @@
+{
+  "agpk_version": "1.0",
+  "id": "org.forgejo.Forgejo.core",
+  "name": "Forgejo Core (agent service)",
+  "version": "1.0.1",
+  "package_kind": "core",
+  "depends": [],
+  "os": ["linux", "agentos-x-desktop", "agentos-x-server"],
+  "arch": ["x86_64"],
+  "vendor": {
+    "name": "AIAGENTNET LLC",
+    "url": "https://www.aiagentnet.cloud"
+  },
+  "upstream": {
+    "name": "Forgejo",
+    "url": "https://forgejo.org/",
+    "license": "GPL-3.0-or-later",
+    "pinned_version": "11.0.16",
+    "binary_source": "https://codeberg.org/forgejo/forgejo/releases"
+  },
+  "source_class": "agent_package",
+  "runtime": {
+    "binary": "official_forgejo",
+    "process": "systemd",
+    "database": "system_postgresql",
+    "docker_primary": false
+  },
+  "ahcp": {
+    "signed": false,
+    "surface": "surface.json",
+    "badge": "full"
+  },
+  "lifecycle": {
+    "install": { "method": "cli", "entry": ["sh", "INSTALL"] },
+    "uninstall": { "method": "cli", "entry": ["sh", "UNINSTALL"] }
+  },
+  "cli": {
+    "apt_style": true,
+    "provides": ["org.forgejo.Forgejo.core", "forgejo-core", "git-forge"]
+  },
+  "description": "Official agentized Forgejo service core: upstream binary + systemd + system PostgreSQL. Full agent command face for service lifecycle, users, tokens, orgs, and repos. Not a tar shell. UI is a separate package (org.forgejo.Forgejo.ui)."
+}

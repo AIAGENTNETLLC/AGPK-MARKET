@@ -1,0 +1,34 @@
+#!/bin/sh
+set -e
+ROOT="${AGPK_INSTALL_ROOT:-/opt/agentx/agpk/org.forgejo.Forgejo.core}"
+UNIT="${FORGEJO_SYSTEMD_UNIT:-forgejo.service}"
+
+if [ "$(id -u)" -eq 0 ]; then
+  systemctl stop "$UNIT" 2>/dev/null || true
+  systemctl disable "$UNIT" 2>/dev/null || true
+  rm -f /etc/systemd/system/forgejo.service
+  systemctl daemon-reload 2>/dev/null || true
+fi
+
+if [ "${AGPK_PURGE:-0}" = "1" ]; then
+  echo "AGPK_PURGE=1: removing work dir and DB (if local superuser)" >&2
+  WORK="${FORGEJO_WORK_DIR:-/var/lib/forgejo}"
+  rm -rf "$WORK"
+  if [ -f "$ROOT/service.env" ]; then
+    # shellcheck disable=SC1091
+    set -a
+    . "$ROOT/service.env"
+    set +a
+  fi
+  if [ "$(id -u)" -eq 0 ] && id postgres >/dev/null 2>&1; then
+    su -s /bin/sh postgres -c "psql -c \"DROP DATABASE IF EXISTS ${FORGEJO_DB_NAME:-forgejo};\"" 2>/dev/null || true
+    su -s /bin/sh postgres -c "psql -c \"DROP ROLE IF EXISTS ${FORGEJO_DB_USER:-forgejo};\"" 2>/dev/null || true
+  fi
+  rm -f /etc/forgejo/app.ini
+else
+  echo "data retained (set AGPK_PURGE=1 to drop DB + work dir)" >&2
+fi
+
+# remove package files but keep if purge off we still remove package tree secrets
+rm -rf "$ROOT"
+echo "UNINSTALL ok org.forgejo.Forgejo.core"

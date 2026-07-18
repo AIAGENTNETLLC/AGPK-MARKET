@@ -1,0 +1,10 @@
+# Official Forgejo pin (AGPK does not vendor the binary; INSTALL fetches + verifies)
+FORGEJO_VERSION=11.0.16
+FORGEJO_TAG=v11.0.16
+FORGEJO_ASSET_XZ=forgejo-11.0.16-linux-amd64.xz
+FORGEJO_ASSET_BIN=forgejo-11.0.16-linux-amd64
+FORGEJO_URL_XZ=https://codeberg.org/forgejo/forgejo/releases/download/v11.0.16/forgejo-11.0.16-linux-amd64.xz
+FORGEJO_URL_BIN=https://codeberg.org/forgejo/forgejo/releases/download/v11.0.16/forgejo-11.0.16-linux-amd64
+FORGEJO_SHA256_XZ=6e4bd33b83153deaa565369652312798ceec6faab2be58de41cd5b35b2248518
+FORGEJO_SHA256_BIN=4cc95eb04d655c45acfc7768ab29ffb9a220ed759a68d784d5d94c05116d7874
+FORGEJO_SHA256_URL_XZ=https://codeberg.org/forgejo/forgejo/releases/download/v11.0.16/forgejo-11.0.16-linux-amd64.xz.sha256

@@ -1,0 +1,55 @@
+; Rendered by INSTALL — AgentNet AGPK Forgejo core
+; Do not commit live secrets.
+
+APP_NAME = AgentOS Forgejo
+RUN_MODE = prod
+RUN_USER = __RUN_USER__
+WORK_PATH = __WORK_DIR__
+
+[server]
+PROTOCOL = http
+DOMAIN = localhost
+HTTP_ADDR = __HTTP_ADDR__
+HTTP_PORT = __HTTP_PORT__
+ROOT_URL = __ROOT_URL__
+DISABLE_SSH = true
+START_SSH_SERVER = false
+OFFLINE_MODE = false
+LFS_START_SERVER = false
+
+[database]
+DB_TYPE = postgres
+HOST = __DB_HOST__:__DB_PORT__
+NAME = __DB_NAME__
+USER = __DB_USER__
+PASSWD = __DB_PASSWORD__
+SCHEMA = public
+SSL_MODE = disable
+LOG_SQL = false
+
+[repository]
+ROOT = __WORK_DIR__/repositories
+
+[security]
+INSTALL_LOCK = true
+SECRET_KEY = __SECRET_KEY__
+INTERNAL_TOKEN = __INTERNAL_TOKEN__
+JWT_SECRET = __JWT_SECRET__
+PASSWORD_HASH_ALGO = pbkdf2
+
+[service]
+DISABLE_REGISTRATION = true
+REQUIRE_SIGNIN_VIEW = false
+ENABLE_NOTIFY_MAIL = false
+
+[session]
+PROVIDER = memory
+
+[log]
+MODE = console
+LEVEL = Info
+ROOT_PATH = __WORK_DIR__/log
+
+[openid]
+ENABLE_OPENID_SIGNIN = false
+ENABLE_OPENID_SIGNUP = false

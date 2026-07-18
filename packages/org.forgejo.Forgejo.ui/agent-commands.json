@@ -1,0 +1,33 @@
+{
+  "schema": "agpk.agent-commands.v1",
+  "package_id": "org.forgejo.Forgejo.ui",
+  "version": "1.1.2",
+  "package_kind": "ui",
+  "ui_face": "desktop_workbench",
+  "depends": [
+    {"package_id": "org.forgejo.Forgejo.core", "version": ">=1.0.0"}
+  ],
+  "driver": {
+    "kind": "process",
+    "description": "Desktop workbench shell + core API helpers; primary=forgejo.ui.workbench.open",
+    "entry": ["sh", "payload/bin/forgejo-ui-driver.sh"]
+  },
+  "functional_parity": {
+    "domain": "git_forge_desktop",
+    "acceptance_face": "ui",
+    "ui_face": "desktop_workbench",
+    "not_launcher": true,
+    "command_count": 9
+  },
+  "commands": [
+    {"id": "forgejo.ui.workbench.open", "title": "Open desktop workbench (primary)", "group": "ui", "risk": "low", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.workbench.open"]},
+    {"id": "forgejo.ui.workbench.status", "title": "Workbench server status", "group": "ui", "risk": "low", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.workbench.status"]},
+    {"id": "forgejo.ui.repo.list", "title": "List repos via core API", "group": "ui", "risk": "low", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.repo.list"]},
+    {"id": "forgejo.ui.repo.create", "title": "Create repo via core API", "group": "ui", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.repo.create"]},
+    {"id": "forgejo.ui.url", "title": "Core base URL", "group": "ui", "risk": "low", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.url"]},
+    {"id": "forgejo.ui.open", "title": "Launcher only (non-primary)", "group": "ui", "risk": "low", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.open"]},
+    {"id": "forgejo.ui.desktop.install", "title": "Install .desktop → workbench shell", "group": "ui", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.desktop.install"]},
+    {"id": "forgejo.ui.desktop.remove", "title": "Remove .desktop", "group": "ui", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.desktop.remove"]},
+    {"id": "forgejo.ui.projection.info", "title": "Projection metadata", "group": "ui", "risk": "low", "entry": ["sh", "payload/bin/forgejo-ui-driver.sh", "forgejo.ui.projection.info"]}
+  ]
+}

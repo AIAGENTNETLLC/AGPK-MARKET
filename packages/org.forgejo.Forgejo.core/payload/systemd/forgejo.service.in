@@ -1,0 +1,28 @@
+[Unit]
+Description=Forgejo (AgentOS AGPK core)
+Documentation=https://forgejo.org/docs/
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=__RUN_USER__
+Group=__RUN_USER__
+WorkingDirectory=__WORK_DIR__
+ExecStart=__BINARY__ web --config __CONFIG__
+Restart=on-failure
+RestartSec=5
+Environment=USER=__RUN_USER__
+Environment=HOME=__WORK_DIR__
+Environment=GITEA_WORK_DIR=__WORK_DIR__
+# Limit exposure; bind address is in app.ini
+# ProtectSystem=full breaks data-disk WORK_DIR under /srv — use false + explicit paths
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=false
+ProtectHome=true
+ReadWritePaths=__WORK_DIR__ __CONFIG_DIR__
+
+[Install]
+WantedBy=multi-user.target

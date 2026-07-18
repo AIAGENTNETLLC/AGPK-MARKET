@@ -1,0 +1,47 @@
+{
+  "schema": "agpk.agent-commands.v1",
+  "package_id": "org.forgejo.Forgejo.core",
+  "version": "1.0.1",
+  "package_kind": "core",
+  "driver": {
+    "kind": "process",
+    "description": "process driver → systemd + official forgejo binary + Forgejo HTTP API (system PostgreSQL)",
+    "entry": ["sh", "payload/bin/forgejo-driver.sh"]
+  },
+  "functional_parity": {
+    "domain": "git_forge_service",
+    "gui_not_aligned": [
+      "web UI chrome",
+      "theme",
+      "markdown editor cosmetics"
+    ],
+    "command_count": 24,
+    "acceptance_face": "core"
+  },
+  "commands": [
+    {"id": "forgejo.service.status", "title": "Service status", "group": "service", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.status"]},
+    {"id": "forgejo.service.start", "title": "Start service", "group": "service", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.start"]},
+    {"id": "forgejo.service.stop", "title": "Stop service", "group": "service", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.stop"]},
+    {"id": "forgejo.service.restart", "title": "Restart service", "group": "service", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.restart"]},
+    {"id": "forgejo.service.enable", "title": "Enable service", "group": "service", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.enable"]},
+    {"id": "forgejo.service.disable", "title": "Disable service", "group": "service", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.disable"]},
+    {"id": "forgejo.service.logs", "title": "Service logs", "group": "service", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.service.logs"]},
+    {"id": "forgejo.health", "title": "HTTP health / version API", "group": "health", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.health"]},
+    {"id": "forgejo.version", "title": "Binary + API version", "group": "health", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.version"]},
+    {"id": "forgejo.db.ping", "title": "PostgreSQL ping", "group": "health", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.db.ping"]},
+    {"id": "forgejo.user.list", "title": "List users (admin)", "group": "users", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.user.list"]},
+    {"id": "forgejo.user.create", "title": "Create user", "group": "users", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.user.create"]},
+    {"id": "forgejo.user.get", "title": "Get user", "group": "users", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.user.get"]},
+    {"id": "forgejo.token.ensure", "title": "Ensure agent API token", "group": "tokens", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.token.ensure"]},
+    {"id": "forgejo.token.revoke", "title": "Revoke token", "group": "tokens", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.token.revoke"]},
+    {"id": "forgejo.org.list", "title": "List orgs", "group": "orgs", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.org.list"]},
+    {"id": "forgejo.org.create", "title": "Create org", "group": "orgs", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.org.create"]},
+    {"id": "forgejo.repo.list", "title": "List repos", "group": "repos", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.repo.list"]},
+    {"id": "forgejo.repo.create", "title": "Create repo", "group": "repos", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.repo.create"]},
+    {"id": "forgejo.repo.get", "title": "Get repo", "group": "repos", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.repo.get"]},
+    {"id": "forgejo.repo.delete", "title": "Delete repo (confirm)", "group": "repos", "risk": "high", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.repo.delete"]},
+    {"id": "forgejo.repo.migrate", "title": "Migrate/mirror remote repo", "group": "repos", "risk": "operator", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.repo.migrate"]},
+    {"id": "forgejo.config.summary", "title": "Non-secret config summary", "group": "ops", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.config.summary"]},
+    {"id": "forgejo.admin.dashboard", "title": "Admin stats sample", "group": "ops", "risk": "low", "entry": ["sh", "payload/bin/forgejo-driver.sh", "forgejo.admin.dashboard"]}
+  ]
+}

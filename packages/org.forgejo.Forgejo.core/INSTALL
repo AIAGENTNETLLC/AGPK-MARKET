@@ -1,0 +1,337 @@
+#!/bin/sh
+# Install Forgejo AGPK core: official binary + systemd + system PostgreSQL.
+# Not a tar shell. Requires Linux + root for system unit (or AGPK_DRY_LAYOUT=1 for layout-only).
+set -e
+
+PKG_DIR="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=/dev/null
+. "$PKG_DIR/DIGESTS"
+
+ROOT="${AGPK_INSTALL_ROOT:-}"
+if [ -z "$ROOT" ]; then
+  ROOT="/opt/agentx/agpk/org.forgejo.Forgejo.core"
+fi
+export AGPK_INSTALL_ROOT="$ROOT"
+
+DRY="${AGPK_DRY_LAYOUT:-0}"
+NEED_ROOT=1
+if [ "$DRY" = "1" ]; then
+  NEED_ROOT=0
+fi
+if [ "${AGPK_ALLOW_USER_INSTALL:-0}" = "1" ]; then
+  NEED_ROOT=0
+fi
+
+if [ "$NEED_ROOT" = "1" ] && [ "$(id -u)" -ne 0 ]; then
+  echo '{"ok":false,"error":"root_required","hint":"INSTALL needs root for systemd unit + system user; or AGPK_DRY_LAYOUT=1 for files only"}' >&2
+  exit 2
+fi
+
+mkdir -p "$ROOT/bin" "$ROOT/payload/bin" "$ROOT/payload/scripts" "$ROOT/payload/conf" \
+  "$ROOT/payload/systemd" "$ROOT/secrets" "$ROOT/conf"
+
+# Copy package payload + manifests
+cp -a "$PKG_DIR/payload/." "$ROOT/payload/"
+for f in agpk.json agent-commands.json surface.json USAGE.md AGENT_CAPABILITIES.md DIGESTS; do
+  [ -f "$PKG_DIR/$f" ] && cp -a "$PKG_DIR/$f" "$ROOT/"
+done
+chmod +x "$ROOT/payload/scripts/"*.sh "$ROOT/payload/bin/"* 2>/dev/null || true
+
+# Defaults (FORGEJO_VERSION from DIGESTS unless overridden)
+export FORGEJO_VERSION="${FORGEJO_VERSION:-11.0.16}"
+export FORGEJO_HTTP_ADDR="${FORGEJO_HTTP_ADDR:-127.0.0.1}"
+export FORGEJO_HTTP_PORT="${FORGEJO_HTTP_PORT:-3000}"
+export FORGEJO_ROOT_URL="${FORGEJO_ROOT_URL:-http://${FORGEJO_HTTP_ADDR}:${FORGEJO_HTTP_PORT}/}"
+export FORGEJO_WORK_DIR="${FORGEJO_WORK_DIR:-/var/lib/forgejo}"
+export FORGEJO_CONFIG="${FORGEJO_CONFIG:-/etc/forgejo/app.ini}"
+export FORGEJO_RUN_USER="${FORGEJO_RUN_USER:-forgejo}"
+export FORGEJO_DB_HOST="${FORGEJO_DB_HOST:-127.0.0.1}"
+# Port: honor FORGEJO_DB_PORT; else probe (AgentOS often 5433)
+if [ -z "${FORGEJO_DB_PORT:-}" ]; then
+  if [ -x "$PKG_DIR/payload/scripts/probe-pg-port.sh" ]; then
+    FORGEJO_DB_PORT="$(sh "$PKG_DIR/payload/scripts/probe-pg-port.sh")"
+  elif [ -x "$ROOT/payload/scripts/probe-pg-port.sh" ]; then
+    FORGEJO_DB_PORT="$(sh "$ROOT/payload/scripts/probe-pg-port.sh")"
+  else
+    FORGEJO_DB_PORT=5433
+  fi
+fi
+export FORGEJO_DB_PORT
+export FORGEJO_DB_NAME="${FORGEJO_DB_NAME:-forgejo}"
+export FORGEJO_DB_USER="${FORGEJO_DB_USER:-forgejo}"
+export FORGEJO_ADMIN_USER="${FORGEJO_ADMIN_USER:-agpk-admin}"
+export FORGEJO_ADMIN_EMAIL="${FORGEJO_ADMIN_EMAIL:-agpk-admin@localhost}"
+
+if [ "$DRY" = "1" ]; then
+  # Layout-only install for CI / non-linux packaging tests (force paths under ROOT)
+  export FORGEJO_WORK_DIR="$ROOT/var/lib/forgejo"
+  export FORGEJO_CONFIG="$ROOT/conf/app.ini"
+  export FORGEJO_DB_PASSWORD="${FORGEJO_DB_PASSWORD:-dry-layout-not-a-real-secret}"
+  export FORGEJO_SECRET_KEY="${FORGEJO_SECRET_KEY:-dry-secret-key-not-for-prod}"
+  export FORGEJO_INTERNAL_TOKEN="${FORGEJO_INTERNAL_TOKEN:-dry-internal-token-not-for-prod}"
+  export FORGEJO_JWT_SECRET="${FORGEJO_JWT_SECRET:-dry-jwt-secret-not-for-prod}"
+  mkdir -p "$FORGEJO_WORK_DIR" "$(dirname "$FORGEJO_CONFIG")"
+  # placeholder binary mark
+  printf '#!/bin/sh\necho forgejo-dry %s\n' "$FORGEJO_VERSION" >"$ROOT/bin/forgejo"
+  chmod +x "$ROOT/bin/forgejo"
+  sh "$ROOT/payload/scripts/render-config.sh" "$ROOT/payload/conf/app.ini.in" "$FORGEJO_CONFIG"
+  export FORGEJO_BINARY="$ROOT/bin/forgejo"
+  sh "$ROOT/payload/scripts/render-unit.sh" "$ROOT/payload/systemd/forgejo.service.in" "$ROOT/payload/systemd/forgejo.service"
+  cat >"$ROOT/service.env" <<EOF
+AGPK_SERVICE_URL=${FORGEJO_ROOT_URL}
+FORGEJO_ROOT_URL=${FORGEJO_ROOT_URL}
+FORGEJO_HTTP_ADDR=${FORGEJO_HTTP_ADDR}
+FORGEJO_HTTP_PORT=${FORGEJO_HTTP_PORT}
+FORGEJO_WORK_DIR=${FORGEJO_WORK_DIR}
+FORGEJO_CONFIG=${FORGEJO_CONFIG}
+FORGEJO_BINARY=${FORGEJO_BINARY}
+FORGEJO_DB_HOST=${FORGEJO_DB_HOST}
+FORGEJO_DB_PORT=${FORGEJO_DB_PORT}
+FORGEJO_DB_NAME=${FORGEJO_DB_NAME}
+FORGEJO_DB_USER=${FORGEJO_DB_USER}
+FORGEJO_DB_PASSWORD=${FORGEJO_DB_PASSWORD}
+FORGEJO_ADMIN_USER=${FORGEJO_ADMIN_USER}
+FORGEJO_VERSION=${FORGEJO_VERSION}
+FORGEJO_SYSTEMD_UNIT=forgejo.service
+PACKAGE_KIND=core
+EOF
+  cat >"$ROOT/run_cmd.sh" <<'EOS'
+#!/bin/sh
+set -e
+HERE="$(cd "$(dirname "$0")" && pwd)"
+export AGPK_INSTALL_ROOT="$HERE"
+if [ -f "$HERE/service.env" ]; then set -a; . "$HERE/service.env"; set +a; fi
+CMD="$1"; shift || true
+ARGS="${AGPK_INVOKE_ARGS:-}"
+if [ -z "$ARGS" ]; then
+  if [ "$#" -gt 0 ]; then ARGS="$1"; else ARGS='{}'; fi
+fi
+exec python3 "$HERE/payload/bin/forgejo-agent.py" "$CMD" "$ARGS"
+EOS
+  chmod +x "$ROOT/run_cmd.sh"
+  python3 -c "
+import json
+from pathlib import Path
+root=Path('$ROOT')
+p=root/'agent-commands.json'
+doc=json.loads(p.read_text())
+for c in doc.get('commands',[]):
+    c['entry']=['sh','run_cmd.sh',c['id']]
+p.write_text(json.dumps(doc,indent=2)+chr(10))
+"
+  echo "INSTALL dry-layout ok org.forgejo.Forgejo.core root=$ROOT"
+  exit 0
+fi
+
+# --- full system install ---
+# git is required by Forgejo for repository operations (not optional)
+if ! command -v git >/dev/null 2>&1; then
+  echo "INSTALL: git missing — installing via apt if available" >&2
+  if command -v apt-get >/dev/null 2>&1; then
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -qq >/dev/null 2>&1 || true
+    apt-get install -y -qq git >/dev/null 2>&1 || {
+      echo '{"ok":false,"error":"git_install_failed","hint":"apt-get install -y git"}' >&2
+      exit 2
+    }
+  else
+    echo '{"ok":false,"error":"git_missing","hint":"install git package before Forgejo core"}' >&2
+    exit 2
+  fi
+fi
+if ! command -v git >/dev/null 2>&1; then
+  echo '{"ok":false,"error":"git_still_missing"}' >&2
+  exit 2
+fi
+
+# Port already resolved above (user FORGEJO_DB_PORT or probe). Re-export for ensure-pg.
+export FORGEJO_DB_PORT
+echo "INSTALL: FORGEJO_DB_HOST=$FORGEJO_DB_HOST FORGEJO_DB_PORT=$FORGEJO_DB_PORT" >&2
+
+echo "fetching official Forgejo $FORGEJO_VERSION" >&2
+sh "$ROOT/payload/scripts/fetch-binary.sh" "$ROOT/bin/forgejo"
+export FORGEJO_BINARY="$ROOT/bin/forgejo"
+
+# system user
+if ! id "$FORGEJO_RUN_USER" >/dev/null 2>&1; then
+  useradd --system --home-dir "$FORGEJO_WORK_DIR" --shell /usr/sbin/nologin "$FORGEJO_RUN_USER" 2>/dev/null \
+    || useradd --system --home-dir "$FORGEJO_WORK_DIR" --shell /bin/false "$FORGEJO_RUN_USER"
+fi
+mkdir -p "$FORGEJO_WORK_DIR/repositories" "$FORGEJO_WORK_DIR/log" /etc/forgejo
+chown -R "$FORGEJO_RUN_USER:$FORGEJO_RUN_USER" "$FORGEJO_WORK_DIR"
+
+# PostgreSQL — capture ONLY the last non-empty line as JSON (ensure-pg stdout is single JSON)
+PG_JSON="$(sh "$ROOT/payload/scripts/ensure-pg.sh" | tail -n 1)"
+echo "$PG_JSON" | python3 -c '
+import json,sys
+raw=sys.stdin.read().strip()
+# tolerate accidental trailing noise: take last line that starts with {
+for line in reversed(raw.splitlines() or [raw]):
+    line=line.strip()
+    if line.startswith("{"):
+        d=json.loads(line)
+        break
+else:
+    raise SystemExit("ensure-pg produced no JSON: "+raw[:200])
+assert d.get("ok"), d
+open(sys.argv[1],"w").write(d["password"]+"\n")
+if d.get("port"):
+    open(sys.argv[2],"w").write(str(d["port"]))
+' "$ROOT/secrets/db_password" "$ROOT/secrets/db_port"
+chmod 600 "$ROOT/secrets/db_password"
+export FORGEJO_DB_PASSWORD="$(cat "$ROOT/secrets/db_password")"
+if [ -f "$ROOT/secrets/db_port" ]; then
+  export FORGEJO_DB_PORT="$(tr -d '\n' <"$ROOT/secrets/db_port")"
+fi
+
+# secrets for forgejo (pre-seed JWT so forgejo need not rewrite config; still chown writable)
+if [ ! -f "$ROOT/secrets/secret_key" ]; then
+  "$FORGEJO_BINARY" generate secret SECRET_KEY >"$ROOT/secrets/secret_key" 2>/dev/null \
+    || python3 -c 'import secrets; print(secrets.token_hex(32))' >"$ROOT/secrets/secret_key"
+fi
+if [ ! -f "$ROOT/secrets/internal_token" ]; then
+  "$FORGEJO_BINARY" generate secret INTERNAL_TOKEN >"$ROOT/secrets/internal_token" 2>/dev/null \
+    || python3 -c 'import secrets; print(secrets.token_urlsafe(32))' >"$ROOT/secrets/internal_token"
+fi
+if [ ! -f "$ROOT/secrets/jwt_secret" ]; then
+  "$FORGEJO_BINARY" generate secret JWT_SECRET >"$ROOT/secrets/jwt_secret" 2>/dev/null \
+    || python3 -c 'import secrets; print(secrets.token_urlsafe(32))' >"$ROOT/secrets/jwt_secret"
+fi
+chmod 600 "$ROOT/secrets/secret_key" "$ROOT/secrets/internal_token" "$ROOT/secrets/jwt_secret"
+export FORGEJO_SECRET_KEY="$(tr -d '\n' <"$ROOT/secrets/secret_key")"
+export FORGEJO_INTERNAL_TOKEN="$(tr -d '\n' <"$ROOT/secrets/internal_token")"
+export FORGEJO_JWT_SECRET="$(tr -d '\n' <"$ROOT/secrets/jwt_secret")"
+
+sh "$ROOT/payload/scripts/render-config.sh" "$ROOT/payload/conf/app.ini.in" "$FORGEJO_CONFIG"
+# Forgejo must be able to write JWT_SECRET / config updates into app.ini
+chown "$FORGEJO_RUN_USER:$FORGEJO_RUN_USER" "$FORGEJO_CONFIG"
+chmod 0600 "$FORGEJO_CONFIG"
+# also ensure /etc/forgejo is writable by service user
+chown "$FORGEJO_RUN_USER:$FORGEJO_RUN_USER" /etc/forgejo
+chmod 0750 /etc/forgejo
+
+sh "$ROOT/payload/scripts/render-unit.sh" "$ROOT/payload/systemd/forgejo.service.in" /etc/systemd/system/forgejo.service
+systemctl daemon-reload
+systemctl enable forgejo.service
+systemctl restart forgejo.service
+
+# wait API
+i=0
+while [ "$i" -lt 60 ]; do
+  if curl -fsS "${FORGEJO_ROOT_URL%/}/api/v1/version" >/dev/null 2>&1; then
+    break
+  fi
+  i=$((i + 1))
+  sleep 1
+done
+if ! curl -fsS "${FORGEJO_ROOT_URL%/}/api/v1/version" >/dev/null 2>&1; then
+  echo '{"ok":false,"error":"forgejo_api_timeout_after_start"}' >&2
+  journalctl -u forgejo -n 40 --no-pager >&2 || true
+  exit 1
+fi
+
+# admin user + password
+if [ -z "${FORGEJO_ADMIN_PASSWORD:-}" ]; then
+  FORGEJO_ADMIN_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_urlsafe(18))')"
+fi
+echo "$FORGEJO_ADMIN_PASSWORD" >"$ROOT/secrets/admin_password"
+chmod 600 "$ROOT/secrets/admin_password"
+export FORGEJO_ADMIN_PASSWORD
+
+# create admin if missing (CLI)
+set +e
+sudo -u "$FORGEJO_RUN_USER" env GITEA_WORK_DIR="$FORGEJO_WORK_DIR" \
+  "$FORGEJO_BINARY" admin user create \
+  --config "$FORGEJO_CONFIG" \
+  --admin \
+  --username "$FORGEJO_ADMIN_USER" \
+  --password "$FORGEJO_ADMIN_PASSWORD" \
+  --email "$FORGEJO_ADMIN_EMAIL" \
+  --must-change-password=false 2>/tmp/forgejo-admin-create.err
+CREATE_RC=$?
+set -e
+# ignore already exists
+
+# service.env (no password in world-readable paths — 0600)
+cat >"$ROOT/service.env" <<EOF
+AGPK_SERVICE_URL=${FORGEJO_ROOT_URL}
+FORGEJO_ROOT_URL=${FORGEJO_ROOT_URL}
+FORGEJO_HTTP_ADDR=${FORGEJO_HTTP_ADDR}
+FORGEJO_HTTP_PORT=${FORGEJO_HTTP_PORT}
+FORGEJO_WORK_DIR=${FORGEJO_WORK_DIR}
+FORGEJO_CONFIG=${FORGEJO_CONFIG}
+FORGEJO_BINARY=${FORGEJO_BINARY}
+FORGEJO_DB_HOST=${FORGEJO_DB_HOST}
+FORGEJO_DB_PORT=${FORGEJO_DB_PORT}
+FORGEJO_DB_NAME=${FORGEJO_DB_NAME}
+FORGEJO_DB_USER=${FORGEJO_DB_USER}
+FORGEJO_DB_PASSWORD=${FORGEJO_DB_PASSWORD}
+FORGEJO_ADMIN_USER=${FORGEJO_ADMIN_USER}
+FORGEJO_ADMIN_PASSWORD=${FORGEJO_ADMIN_PASSWORD}
+FORGEJO_VERSION=${FORGEJO_VERSION}
+FORGEJO_SYSTEMD_UNIT=forgejo.service
+PACKAGE_KIND=core
+EOF
+chmod 600 "$ROOT/service.env"
+
+cat >"$ROOT/run_cmd.sh" <<'EOS'
+#!/bin/sh
+set -e
+HERE="$(cd "$(dirname "$0")" && pwd)"
+export AGPK_INSTALL_ROOT="$HERE"
+if [ -f "$HERE/service.env" ]; then set -a; . "$HERE/service.env"; set +a; fi
+CMD="$1"; shift || true
+ARGS="${AGPK_INVOKE_ARGS:-}"
+if [ -z "$ARGS" ]; then
+  if [ "$#" -gt 0 ]; then ARGS="$1"; else ARGS='{}'; fi
+fi
+exec python3 "$HERE/payload/bin/forgejo-agent.py" "$CMD" "$ARGS"
+EOS
+chmod +x "$ROOT/run_cmd.sh"
+
+# rewrite command entries
+python3 -c "
+import json
+from pathlib import Path
+root=Path('$ROOT')
+p=root/'agent-commands.json'
+doc=json.loads(p.read_text())
+for c in doc.get('commands',[]):
+    c['entry']=['sh','run_cmd.sh',c['id']]
+p.write_text(json.dumps(doc,indent=2)+chr(10))
+"
+
+# ensure API token
+export AGPK_INSTALL_ROOT="$ROOT"
+set +e
+python3 "$ROOT/payload/bin/forgejo-agent.py" forgejo.token.ensure '{}'
+TOK_RC=$?
+set -e
+
+VER="$(curl -fsS "${FORGEJO_ROOT_URL%/}/api/v1/version" 2>/dev/null || echo '{}')"
+export TOK_RC CREATE_RC VER
+python3 - <<'PY'
+import json, os
+try:
+    ver = json.loads(os.environ.get("VER") or "{}")
+except Exception:
+    ver = {"raw": os.environ.get("VER")}
+print(json.dumps({
+  "ok": True,
+  "package_id": "org.forgejo.Forgejo.core",
+  "version": "1.0.1",
+  "package_kind": "core",
+  "forgejo_version": os.environ.get("FORGEJO_VERSION"),
+  "install_root": os.environ.get("AGPK_INSTALL_ROOT"),
+  "base_url": os.environ.get("FORGEJO_ROOT_URL"),
+  "unit": "forgejo.service",
+  "database": "system_postgresql",
+  "docker_primary": False,
+  "admin_user": os.environ.get("FORGEJO_ADMIN_USER"),
+  "token_ensure_rc": int(os.environ.get("TOK_RC", "1")),
+  "api_version": ver,
+  "admin_create_rc": int(os.environ.get("CREATE_RC", "0")),
+}, indent=2))
+PY
+
+echo "INSTALL ok org.forgejo.Forgejo.core" >&2
