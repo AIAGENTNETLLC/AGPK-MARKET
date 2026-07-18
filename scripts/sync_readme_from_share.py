@@ -54,7 +54,14 @@ OFFICIAL_VENDOR_NEEDLES = (
 # Upstream FOSS / product credits for agentized packages (package_id prefix → credit).
 # Keep thanking the original authors; our packages are adaptations, not ownership claims.
 UPSTREAM_ACK: list[dict[str, str]] = [
-    {
+        {
+        "package_prefix": "org.forgejo.Forgejo",
+        "upstream": "Forgejo",
+        "project": "Forgejo — self-hosted lightweight software forge",
+        "url": "https://forgejo.org/",
+        "note": "Official binary + systemd + system PostgreSQL agentized as core; UI depends core.",
+    },
+{
         "package_prefix": "org.chromium.Chromium",
         "upstream": "Chromium",
         "project": "The Chromium Authors / Google Chromium project",

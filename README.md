@@ -17,7 +17,7 @@ The tables below are **generated from the live share catalog after probe/revalid
 ## Official packages
 
 <!-- AUTO:OFFICIAL_PACKAGES:START -->
-Live from share catalog (`healthy` | `degraded`) · **14** official row(s).
+Live from share catalog (`healthy` | `degraded`) · **16** official row(s).
 
 Classification: `download_uri` under `github.com/AIAGENTNETLLC/` **or** vendor **AIAGENTNET LLC** / AgentNet.
 
@@ -34,6 +34,8 @@ Classification: `download_uri` under `github.com/AIAGENTNETLLC/` **or** vendor *
 | `org.chromium.Chromium.runtime` | **1.2.0** | `healthy` | AIAGENTNET LLC | Headless Chromium engine + full chrome.*/browser.* agent command surface (78 cmds). Functional parity browser automation; projection.* for human view. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/chromium-runtime-v1.2.0) |
 | `org.crater.Crater.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Crater: real /api/v1 bootstrap and invoices when Crater is up. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/crater-Crater-agent-v1-1-0) |
 | `org.docuseal.DocuSeal.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized DocuSeal: real REST API list/create submissions against DocuSeal instance. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/docuseal-DocuSeal-agent-v1-1-0) |
+| `org.forgejo.Forgejo.core` | **1.0.0** | `healthy` | AIAGENTNET LLC | Forgejo Core (agent service · systemd + system PG) | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/forgejo-core-v1.0.0) |
+| `org.forgejo.Forgejo.ui` | **1.0.0** | `healthy` | AIAGENTNET LLC | Forgejo UI (depends core · desktop/projection) | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/forgejo-ui-v1.0.0) |
 | `org.jitsi.JitsiMeet.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Jitsi Meet: real room create against Jitsi HTTP endpoint. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/jitsi-JitsiMeet-agent-v1-1-0) |
 | `org.kde.Kdenlive.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized video path: melt/ffmpeg FOSS batch render (Kdenlive domain, no GUI primary). | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/kde-Kdenlive-agent-v1-1-0) |
 | `org.nextcloud.Nextcloud.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Nextcloud: WebDAV put/get + OCS user probe. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/nextcloud-Nextcloud-agent-v1-1-0) |
@@ -62,6 +64,7 @@ AgentNet official market packages are **agentized adaptations**. We do **not** c
 
 | Upstream | Project | Thanks for | Link |
 |---|---|---|---|
+| **Forgejo** | Forgejo — self-hosted lightweight software forge (Codeberg e.V. / Forgejo contributors) | Official binary + systemd + system PostgreSQL agentized as core; UI package depends core. | [https://forgejo.org/](https://forgejo.org/) |
 | **Chromium** | The Chromium Authors / Google Chromium project | Headless browser engine basis for our agent command surface. | [https://www.chromium.org/](https://www.chromium.org/) |
 | **Actual Budget** | Actual Budget (open-source personal finance) | Agentized around Actual’s server HTTP surface. | [https://actualbudget.org/](https://actualbudget.org/) |
 | **Audacity** | Audacity Team — Audacity digital audio editor | Audio domain packaging; headless paths use FOSS ffmpeg where noted. | [https://www.audacityteam.org/](https://www.audacityteam.org/) |
@@ -116,5 +119,5 @@ Website proxy: `POST https://www.aiagentnet.cloud/api/agpk/sources`
 - Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases
 
 <!-- AUTO:SYNC_META:START -->
-_Last auto-sync: **2026-07-18 19:29 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=14 · other-vendor=0 · live_total=14. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
+_Last auto-sync: **2026-07-18 19:54 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=16 · other-vendor=0 · live_total=16. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
 <!-- AUTO:SYNC_META:END -->
