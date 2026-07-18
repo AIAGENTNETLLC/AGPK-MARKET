@@ -35,7 +35,7 @@ Classification: `download_uri` under `github.com/AIAGENTNETLLC/` **or** vendor *
 | `org.crater.Crater.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Crater: real /api/v1 bootstrap and invoices when Crater is up. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/crater-Crater-agent-v1-1-0) |
 | `org.docuseal.DocuSeal.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized DocuSeal: real REST API list/create submissions against DocuSeal instance. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/docuseal-DocuSeal-agent-v1-1-0) |
 | `org.forgejo.Forgejo.core` | **1.0.1** | `healthy` | AIAGENTNET LLC | Forgejo Core 1.0.1 (systemd+PG; INSTALL hardened) | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/forgejo-core-v1.0.1) |
-| `org.forgejo.Forgejo.ui` | **1.1.0** | `healthy` | AIAGENTNET LLC | Forgejo UI Workbench 1.1.0 (desktop_workbench; not launcher) | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/forgejo-ui-v1.1.0) |
+| `org.forgejo.Forgejo.ui` | **1.1.1** | `healthy` | AIAGENTNET LLC | Desktop workbench zh/en follow system; not launcher-only | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/forgejo-ui-v1.1.1) |
 | `org.jitsi.JitsiMeet.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Jitsi Meet: real room create against Jitsi HTTP endpoint. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/jitsi-JitsiMeet-agent-v1-1-0) |
 | `org.kde.Kdenlive.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized video path: melt/ffmpeg FOSS batch render (Kdenlive domain, no GUI primary). | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/kde-Kdenlive-agent-v1-1-0) |
 | `org.nextcloud.Nextcloud.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized Nextcloud: WebDAV put/get + OCS user probe. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/nextcloud-Nextcloud-agent-v1-1-0) |
@@ -119,5 +119,5 @@ Website proxy: `POST https://www.aiagentnet.cloud/api/agpk/sources`
 - Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases
 
 <!-- AUTO:SYNC_META:START -->
-_Last auto-sync: **2026-07-18 20:54 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=16 · other-vendor=0 · live_total=16. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
+_Last auto-sync: **2026-07-18 21:15 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=16 · other-vendor=0 · live_total=16. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
 <!-- AUTO:SYNC_META:END -->
