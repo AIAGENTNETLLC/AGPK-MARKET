@@ -327,3 +327,26 @@ agentx agpk remove org.agentnet.edge.siemens-s7-1500 --approve -y
 | Demo S7 address map | Entire plant PROFINET design |
 
 Human-facing result presentation: **projection.*** — not vendor HMI as the primary agent path.
+
+
+---
+
+## Production deployment (industrial — not demo)
+
+See monorepo SPEC_AGPK_Edge_工业生产就绪_标签总线_2026-07-29.md.
+
+### Envelope / write-ack / plant env
+
+Envelope schema `agpk.edge.tag-value.v1` on topic `…/tags/<TAG>`.
+Write ack on `…/tags/<TAG>/ack` as `agpk.edge.write-ack.v1`.
+
+```bash
+export EDGE_MODE=production
+export EDGE_TRANSPORT=mqtt
+export EDGE_MQTT_URL=mqtt://broker:1883
+export EDGE_MQTT_USERNAME=agentos
+export EDGE_MQTT_PASSWORD=***
+export EDGE_REQUIRE_WRITE_ACK=1
+```
+
+Credentials never in AGPK tarball. Runtime agentx-edge >= 0.2.
