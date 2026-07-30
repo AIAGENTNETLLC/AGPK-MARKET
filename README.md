@@ -17,7 +17,7 @@ The tables below are **generated from the live share catalog after probe/revalid
 ## Official packages
 
 <!-- AUTO:OFFICIAL_PACKAGES:START -->
-Live from share catalog (`healthy` | `degraded`) · **18** official row(s).
+Live from share catalog (`healthy` | `degraded`) · **19** official row(s).
 
 Classification: `download_uri` under `github.com/AIAGENTNETLLC/` **or** vendor **AIAGENTNET LLC** / AgentNet.
 
@@ -31,6 +31,7 @@ Classification: `download_uri` under `github.com/AIAGENTNETLLC/` **or** vendor *
 | `org.agentnet.agpk.sdk` | **1.2.0** | `healthy` | AIAGENTNET LLC | Vendor toolkit C1–C4: scaffold/pack/validate with entry+driver; list_commands + invoke ready templates. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/agpk-sdk-v1.2.0) |
 | `org.agentnet.desktop.control.core` | **2.0.0** | `healthy` | AIAGENTNET LLC | Universal single-process desktop control: desktop.use routes a11y to OCR to pixel for all software windows. Agent-first AGPK core. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/desktop-control-core-v2.0.0) |
 | `org.agentnet.edge.siemens-s7-1500` | **1.1.0** | `healthy` | AIAGENTNET LLC | Industrial S7-1500 tag bus: envelope, write-ack, health, production fail-closed (agentx-edge 0.2+). | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/edge-siemens-s7-1500-v1.1.0) |
+| `org.agentnet.screen.record.core` | **1.0.0** | `healthy` | AIAGENTNET LLC | Agent-first screen recording: start/pause/resume/stop/finalize; segment resume; crash→interrupted no auto-resume. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/screen-record-core-v1.0.0) |
 | `org.audacityteam.Audacity.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized audio path: probes audacity/ffmpeg; headless export via ffmpeg FOSS engine. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/audacityteam-Audacity-agent-v1-1-0) |
 | `org.bookstack.BookStack.agent` | **1.1.0** | `healthy` | AIAGENTNET LLC | Agentized BookStack: real REST API books/pages/search. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/bookstack-BookStack-agent-v1-1-0) |
 | `org.chromium.Chromium.runtime` | **1.2.0** | `healthy` | AIAGENTNET LLC | Headless Chromium engine + full chrome.*/browser.* agent command surface (78 cmds). Functional parity browser automation; projection.* for human view. | [release](https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases/tag/chromium-runtime-v1.2.0) |
@@ -66,7 +67,7 @@ AgentNet official market packages are **agentized adaptations**. We do **not** c
 
 | Upstream | Project | Thanks for | Link |
 |---|---|---|---|
-| **Forgejo** | Forgejo — self-hosted lightweight software forge | Official binary + systemd + system PostgreSQL agentized as core; UI depends core. | [https://forgejo.org/](https://forgejo.org/) |
+| **Forgejo** | Forgejo — self-hosted lightweight software forge (Codeberg e.V. / Forgejo contributors) | Official binary + systemd + system PostgreSQL agentized as core; UI package depends core. | [https://forgejo.org/](https://forgejo.org/) |
 | **Chromium** | The Chromium Authors / Google Chromium project | Headless browser engine basis for our agent command surface. | [https://www.chromium.org/](https://www.chromium.org/) |
 | **Actual Budget** | Actual Budget (open-source personal finance) | Agentized around Actual’s server HTTP surface. | [https://actualbudget.org/](https://actualbudget.org/) |
 | **Audacity** | Audacity Team — Audacity digital audio editor | Audio domain packaging; headless paths use FOSS ffmpeg where noted. | [https://www.audacityteam.org/](https://www.audacityteam.org/) |
@@ -121,5 +122,5 @@ Website proxy: `POST https://www.aiagentnet.cloud/api/agpk/sources`
 - Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases
 
 <!-- AUTO:SYNC_META:START -->
-_Last auto-sync: **2026-07-30 19:49 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=18 · other-vendor=0 · live_total=18. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
+_Last auto-sync: **2026-07-30 20:10 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=19 · other-vendor=0 · live_total=19. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
 <!-- AUTO:SYNC_META:END -->
