@@ -121,5 +121,5 @@ Website proxy: `POST https://www.aiagentnet.cloud/api/agpk/sources`
 - Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases
 
 <!-- AUTO:SYNC_META:START -->
-_Last auto-sync: **2026-07-30 14:29 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=18 · other-vendor=0 · live_total=18. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
+_Last auto-sync: **2026-07-30 19:49 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=18 · other-vendor=0 · live_total=18. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
 <!-- AUTO:SYNC_META:END -->
