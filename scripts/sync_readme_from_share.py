@@ -69,6 +69,13 @@ UPSTREAM_ACK: list[dict[str, str]] = [
         "note": "Headless browser engine basis for our agent command surface.",
     },
     {
+        "package_prefix": "org.excalidraw.Excalidraw",
+        "upstream": "Excalidraw",
+        "project": "Excalidraw — virtual whiteboard (MIT)",
+        "url": "https://github.com/excalidraw/excalidraw",
+        "note": "Official .excalidraw scene format; agentized as a headless draw.* scene engine (not a React wrap).",
+    },
+    {
         "package_prefix": "org.actualbudget.Actual",
         "upstream": "Actual Budget",
         "project": "Actual Budget (open-source personal finance)",
