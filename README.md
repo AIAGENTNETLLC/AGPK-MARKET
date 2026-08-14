@@ -68,7 +68,7 @@ AgentNet official market packages are **agentized adaptations**. We do **not** c
 
 | Upstream | Project | Thanks for | Link |
 |---|---|---|---|
-| **Forgejo** | Forgejo — self-hosted lightweight software forge (Codeberg e.V. / Forgejo contributors) | Official binary + systemd + system PostgreSQL agentized as core; UI package depends core. | [https://forgejo.org/](https://forgejo.org/) |
+| **Forgejo** | Forgejo — self-hosted lightweight software forge | Official binary + systemd + system PostgreSQL agentized as core; UI depends core. | [https://forgejo.org/](https://forgejo.org/) |
 | **Chromium** | The Chromium Authors / Google Chromium project | Headless browser engine basis for our agent command surface. | [https://www.chromium.org/](https://www.chromium.org/) |
 | **Excalidraw** | Excalidraw — virtual whiteboard (MIT) | Official .excalidraw scene format; agentized as a headless draw.* scene engine (not a React wrap). | [https://github.com/excalidraw/excalidraw](https://github.com/excalidraw/excalidraw) |
 | **Actual Budget** | Actual Budget (open-source personal finance) | Agentized around Actual’s server HTTP surface. | [https://actualbudget.org/](https://actualbudget.org/) |
@@ -124,5 +124,5 @@ Website proxy: `POST https://www.aiagentnet.cloud/api/agpk/sources`
 - Releases: https://github.com/AIAGENTNETLLC/AGPK-MARKET/releases
 
 <!-- AUTO:SYNC_META:START -->
-_Last auto-sync: **2026-08-14 07:42 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=20 · other-vendor=0 · live_total=20. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
+_Last auto-sync: **2026-08-14 07:47 UTC** from `https://api.agentnet.ink/share/v1/agpk/sources` · official=20 · other-vendor=0 · live_total=20. Regenerate: `python3 scripts/sync_readme_from_share.py --write` (or GitHub Action `sync-readme-from-share`)._
 <!-- AUTO:SYNC_META:END -->
